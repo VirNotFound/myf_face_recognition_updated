@@ -1,0 +1,4 @@
+Go to the link and download the suitable pre-trained model for face detection using YOLO.
+Then using Ultralytics, load this model into your script.
+
+https://github.com/akanametov/yolov8-face
