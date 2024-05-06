@@ -20,6 +20,12 @@ Python (3.10.0)
 Folder Structure:
 
 -root
+    -data
+        Image.jpg
+        Video.mp4
+        .
+        .
+        .
     -embeddings
         Tony_Stark_embeddings.npy
         .
@@ -30,9 +36,10 @@ Folder Structure:
         embeddings.py
         images.py
         simple_video.py
-        video.py
-        yolov8n-face.pt (YOLO Fface Detection Model)
-    readme.txt
+        videos.py
+
+    README.txt
+    yolov8n-face.pt
     test_script.py (Create your python scripts here to use this library)
 
 Don't change the myf_face_recognition folder Structure,
@@ -53,7 +60,7 @@ Identify Faces in Videos
 1. Generate Face Embeddings
 
 What are Face Embeddings?
-Face embeddings are vector representations of facial features extracted from images. These vectors encode unique characteristics of faces in a high-dimensional space, enabling efficient comparison and recognition of faces.
+Face embeddings are vector representations of facial features extracted from images. These vectors encode unique characteristics of faces in a high-dimensional space, enabling efficient comparison and recognition of faces. In simple words, face embeddings are mathematical representation of a face, it is unique for each faces.
 
 Usage-
 
@@ -132,12 +139,13 @@ This is very similar to that of the face recognition in image, essentially this 
 
 Usage-
 
-identify_faces_in_video(test_image, embedding_files, threshold=0.65, show_frame=True)
+identify_faces_in_video(test_image, embedding_files, yolo_model, threshold=0.65, show_frame=True)
 
 Args-
 test_image: Pass each frame of the video in which you want to search the person, this can be done using cv2 library using a loop or some other libraries.
 embedding_files: This is a list of person's embeddings for whome you want to search in the image.
 threshold: This is the trigger knob, adjust this to fine tune the results (default: 0.65).
+yolo_model: You will need a pre-trained face detection model or custom trained model for face detection, pass its path here.
 show_frame: Whether to show the frames and highlight his/her location (default: True).
 
 Return-
@@ -147,6 +155,8 @@ Here is a dummy script for face recognition in a video.
 {
     from myf_face_recognition.video import identify_faces_in_video
     import cv2
+    from ultralytics import YOLO
+    yolo_model = YOLO('yolov8n-face.pt')
 
     # Set a threshold for similarity
     threshold = 0.7
@@ -165,13 +175,14 @@ Here is a dummy script for face recognition in a video.
             print("Couldn't Load")
             break
 
-        results = identify_faces_in_video(frame, embedding_files)
+        results = identify_faces_in_video(frame, embedding_files, yolo_model)
         print(results)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             print("Exiting...")
             break
 
+    cap.release() 
     cv2.destroyAllWindows()
 
 }
